@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 {
     'name': "Horas Facturables",
 
@@ -11,14 +11,14 @@ poder agregar dos nuevos valores al registro de horas: coeficiente de
 facturación (porcentaje positivo) y horas facturables. 
     """,
 
-    'author': "Proyecta",
-    'website': "https://odoo.proyectasoft.com",
+    'author': "PrimateUY",
+    'website': "https://primate.uy/",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/13.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'hr',
-    'version': '17.0.0.1',
+    'version': '17.0.0.2',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'hr_timesheet'],
