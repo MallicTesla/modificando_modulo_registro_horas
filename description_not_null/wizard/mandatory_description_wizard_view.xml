@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <record id="mandatory_description_wizard_view" model="ir.ui.view">
+            <field name="name">mandatory.description.wizard.form.view</field>
+            <field name="model">mandatory.description.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <footer>
+                        <button string="Confirmar"
+                            name="confirm"
+                            type="object"
+                            class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
