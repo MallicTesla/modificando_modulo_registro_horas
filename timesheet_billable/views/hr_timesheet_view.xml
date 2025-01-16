@@ -1,14 +1,23 @@
 <odoo>
     <data>
-
-
+        <!-- Herencia de la vista de árbol para agregar/modificar columnas -->
         <record id="timesheet_view_tree_focus" model="ir.ui.view">
             <field name="name">account.analytic.line.view.tree.focus</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
+                <!-- Modificar la etiqueta de 'unit_amount' y agregar gestión de permisos -->
+                <xpath expr="//field[@name='unit_amount']" position="attributes">
+                    <attribute name="string">Horas Facturables</attribute>
+                    <attribute name="groups">timesheet_billable.view_billable_hours</attribute>
+                </xpath>
+                <!-- Agregar el campo 'billable_hours' con permisos y suma -->
                 <xpath expr="//field[@name='unit_amount']" position="after">
-                    <field name="billable_hours" widget="timesheet_uom" sum="Total" groups="timesheet_billable.view_billable_hours"/>
+                    <field name="billable_hours" 
+                        string="Horas dedicadas" 
+                        widget="timesheet_uom" 
+                        sum="Total" 
+                        groups="timesheet_billable.edit_billable_hours"/>
                 </xpath>
             </field>
         </record>

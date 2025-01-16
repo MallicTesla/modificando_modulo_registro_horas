@@ -2,19 +2,25 @@
 <odoo>
     <data>
 
+        <!-- Categoría para agrupar los permisos -->
         <record model="ir.module.category" id="timesheet_billable_category">
             <field name="name">Focus Timesheet</field>
+            <field name="description">Permisos relacionados con Horas Facturables y dedicadas</field>
+            <field name="sequence">10</field>
         </record>
 
+        <!-- Grupo para visualizar Horas Facturables -->
         <record id="view_billable_hours" model="res.groups">
             <field name="name">Ver Horas Facturables</field>
+            <field name="category_id" ref="timesheet_billable_category"/>
         </record>
 
+        <!-- Grupo para modificar Horas Facturables -->
         <record id="edit_billable_hours" model="res.groups">
             <field name="name">Modificar Horas Facturables</field>
+            <field name="category_id" ref="timesheet_billable_category"/>
             <field name="implied_ids" eval="[(4, ref('view_billable_hours'))]"/>
         </record>
-
 
     </data>
 </odoo>
