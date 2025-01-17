@@ -30,6 +30,7 @@ Block creation of timesheets without description    """,
         'security/ir.model.access.csv',
         'wizard/mandatory_description_wizard_view.xml',
         'wizard/timesheet_wizard_view.xml',
+        'views/assign_sale_order_line_wizard_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

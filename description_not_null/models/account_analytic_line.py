@@ -6,6 +6,13 @@ from odoo.osv import expression
 from odoo.exceptions import RedirectWarning, UserError
 
 
+class Project(models.Model):
+    _inherit = 'project.project'
+
+    is_billable = fields.Boolean(string="Facturable", default=False)
+    sale_order_ids = fields.One2many('sale.order', 'project_id', string="Órdenes de Venta")
+
+
 class AnalyticLine(models.Model):
     _name = 'account.analytic.line'
     _inherit = ['account.analytic.line', 'timer.mixin']
@@ -15,9 +22,7 @@ class AnalyticLine(models.Model):
     @api.model
     def grid_update_cell(self, domain, measure_field_name, value):
         if not self._context.get('description', False):
-
             context = self._context.copy()
-
             context['domain'] = domain
             context['measure_field_name'] = measure_field_name
             context['value'] = value
@@ -37,7 +42,6 @@ class AnalyticLine(models.Model):
                 return
             timesheets = self.search(domain, limit=2)
 
-            # sudo in case of timesheeting a task belonging to a private project
             if timesheets.project_id and not all(timesheets.project_id.sudo().mapped("allow_timesheets")):
                 raise UserError(_("You cannot adjust the time of the timesheet for a project with timesheets disabled."))
 
@@ -75,7 +79,6 @@ class AnalyticLine(models.Model):
                     measure_field_name: value,
                 })
 
-
     @api.model
     def action_start_new_timesheet_timer(self, vals):
         self = self.with_context(from_front=True)
@@ -85,6 +88,34 @@ class AnalyticLine(models.Model):
         self = self.with_context(from_front_stop=True)
         self.created_from_front_and_running = False
         return super(AnalyticLine, self).action_timer_stop()
+
+    @api.onchange('project_id')
+    def _onchange_project_id(self):
+        if self.project_id and self.project_id.is_billable:
+            return {
+                'domain': {
+                    'sale_line_id': [
+                        ('order_id', 'in', self.project_id.sale_order_ids.ids),
+                        ('product_id.type', '=', 'service')
+                    ]
+                }
+            }
+        else:
+            return {
+                'domain': {
+                    'sale_line_id': []
+                }
+            }
+
+    @api.model
+    def action_assign_sale_order_lines(self, sale_order_line_id):
+        """
+        Asigna la línea de orden de venta seleccionada a los registros actuales.
+        """
+        sale_order_line = self.env['sale.order.line'].browse(sale_order_line_id)
+        if sale_order_line.exists():
+            self.write({'so_line': sale_order_line.id})
+        return True
 
     @api.model
     def create(self, vals_list):

@@ -1,0 +1,24 @@
+<odoo>
+    <record id="assign_sale_order_line_wizard_view_form" model="ir.ui.view">
+        <field name="name">assign.sale.order.line.wizard.form</field>
+        <field name="model">assign.sale.order.line.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Asignar Línea de Orden de Venta">
+                <group>
+                    <field name="sale_order_line_id" domain="[('order_id', '!=', False)]"/>
+                </group>
+                <footer>
+                    <button string="Asignar" type="object" name="action_assign_lines" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="assign_sale_order_line_wizard_action" model="ir.actions.act_window">
+        <field name="name">Asignar Línea de Orden de Venta</field>
+        <field name="res_model">assign.sale.order.line.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

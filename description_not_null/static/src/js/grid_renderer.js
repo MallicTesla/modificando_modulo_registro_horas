@@ -26,4 +26,4 @@ patch(GridRenderer.prototype, {
 
         this.actionService.doAction(action);
     }
-})
+});
