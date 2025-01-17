@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
         <!-- Categoría para agrupar los permisos -->
         <record model="ir.module.category" id="timesheet_billable_category">
             <field name="name">Focus Timesheet</field>
@@ -21,6 +20,6 @@
             <field name="category_id" ref="timesheet_billable_category"/>
             <field name="implied_ids" eval="[(4, ref('view_billable_hours'))]"/>
         </record>
-
     </data>
 </odoo>
+

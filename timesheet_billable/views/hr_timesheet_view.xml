@@ -14,7 +14,7 @@
                 <!-- Agregar el campo 'billable_hours' con permisos y suma -->
                 <xpath expr="//field[@name='unit_amount']" position="after">
                     <field name="billable_hours" 
-                        string="Horas dedicadas" 
+                        string="Horas Dedicadas" 
                         widget="timesheet_uom" 
                         sum="Total" 
                         groups="timesheet_billable.edit_billable_hours"/>

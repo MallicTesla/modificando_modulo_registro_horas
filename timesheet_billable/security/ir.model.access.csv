@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_focus_timesheet_focus_timesheet,focus_timesheet.focus_timesheet,model_focus_timesheet_focus_timesheet,base.group_user,1,1,1,1
 access_account_analytic_line_view_hours,account_analytic_line.view_hours,model_account_analytic_line,timesheet_billable.view_billable_hours,1,0,0,0
-access_account_analytic_line_edit_hours,account_analytic_line.edit_hours,model_account_analytic_line,timesheet_billable.edit_billable_hours,1,1,0,0
+access_account_analytic_line_edit_hours,account_analytic_line.edit_hours,model_account_analytic_line,timesheet_billable.edit_billable_hours,1,1,1,1
+

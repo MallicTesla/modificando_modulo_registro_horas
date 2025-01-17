@@ -26,6 +26,7 @@ facturación (porcentaje positivo) y horas facturables.
     # always loaded
     'data': [
         'security/security.xml',
+        'security/ir.model.access.csv',
         'views/hr_timesheet_view.xml',
     ],
     # only loaded in demonstration mode
