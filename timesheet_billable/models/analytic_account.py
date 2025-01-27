@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import AccessError
 
 
 class AccountAnalyticLine(models.Model):
@@ -10,40 +11,48 @@ class AccountAnalyticLine(models.Model):
     @api.model
     def create(self, vals):
         """
-        Sobrescribe el método create para sincronizar 'billable_hours' con 'unit_amount' 
-        y validar permisos antes de crear el registro.
+        Controla la sincronización y valida el estado facturable al crear un registro.
         """
-        # Sincronizar el valor de 'billable_hours' con 'unit_amount'
+        # Sincronizar billable_hours con unit_amount
         if 'billable_hours' in vals:
             vals['unit_amount'] = vals['billable_hours']
 
-        # Validar si el usuario tiene permisos para editar 'billable_hours'
-        if not self.env.user.has_group('timesheet_billable.edit_billable_hours'):
-            # Si no tiene permisos, eliminar 'billable_hours' de los valores
+        # Validar si el proyecto es facturable
+        project_id = vals.get('project_id')
+        if project_id:
+            allow_billable = self.env['project.project'].browse(project_id).allow_billable
+            if not allow_billable:
+                vals['billable_hours'] = 0.0
+
+        # Validar permisos para editar billable_hours
+        if 'billable_hours' in vals and not self.env.user.has_group('timesheet_billable.edit_billable_hours'):
             vals.pop('billable_hours', None)
 
         return super(AccountAnalyticLine, self).create(vals)
 
     def write(self, vals):
         """
-        Sobrescribe el método write para sincronizar campos y actualizar líneas de ventas asociadas.
+        Controla la sincronización y valida el estado facturable al actualizar un registro.
         """
-        # Evitar recursión al actualizar el registro
+        # Prevenir recursión
         if self.env.context.get('prevent_recursion'):
             return super(AccountAnalyticLine, self).write(vals)
 
-        # Sincronizar 'billable_hours' con 'unit_amount' si se incluye en los valores
-        if 'billable_hours' in vals and vals['billable_hours'] != 0.0:
-            vals['unit_amount'] = vals['billable_hours']
+        for record in self:
+            # Sincronizar billable_hours con unit_amount
+            if 'billable_hours' in vals:
+                vals['unit_amount'] = vals['billable_hours']
 
-        # Actualizar el registro con los valores proporcionados
-        res = super(AccountAnalyticLine, self.with_context(prevent_recursion=True)).write(vals)
+            # Validar si el proyecto es facturable
+            if record.project_id and not record.project_id.allow_billable:
+                vals['billable_hours'] = 0.0
 
-        # Actualizar 'qty_delivered' en líneas de ventas relacionadas si es necesario
-        if 'billable_hours' in vals and self.filtered(lambda rec: rec.so_line):
-            self._update_so_line_qty_delivered()
+            # Validar permisos para editar billable_hours
+            if 'billable_hours' in vals and not self.env.user.has_group('timesheet_billable.edit_billable_hours'):
+                raise AccessError(_("No tienes permisos para editar el campo 'Horas Dedicadas'."))
 
-        return res
+        # Actualizar evitando recursión
+        return super(AccountAnalyticLine, self.with_context(prevent_recursion=True)).write(vals)
 
     def _update_so_line_qty_delivered(self):
         """
