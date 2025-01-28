@@ -6,20 +6,24 @@ from odoo.exceptions import AccessError
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    billable_hours = fields.Float(string='Horas Dedicadas', default=0.0)
+    billable_hours = fields.Float(
+        string='Horas Dedicadas',
+        default=0.0,
+        help="Duración en horas y minutos. Ejemplo: 1.5 equivale a 1 hora y 30 minutos.",
+    )
 
     @api.model
     def create(self, vals):
         """
         Sincroniza billable_hours con unit_amount al crear un registro.
         """
+        # Validar permisos para editar billable_hours
+        if 'billable_hours' in vals and not self.env.user.has_group('timesheet_billable.edit_billable_hours'):
+            raise AccessError(_("No tienes permisos para editar el campo 'Horas Dedicadas'."))
+
         # Sincronizar billable_hours con unit_amount
         if 'billable_hours' in vals:
             vals['unit_amount'] = vals['billable_hours']
-
-        # Validar permisos para editar billable_hours
-        if 'billable_hours' in vals and not self.env.user.has_group('timesheet_billable.edit_billable_hours'):
-            vals.pop('billable_hours', None)
 
         return super(AccountAnalyticLine, self).create(vals)
 
@@ -31,13 +35,13 @@ class AccountAnalyticLine(models.Model):
         if self.env.context.get('prevent_recursion'):
             return super(AccountAnalyticLine, self).write(vals)
 
-        # Sincronizar billable_hours con unit_amount
-        if 'billable_hours' in vals:
-            vals['unit_amount'] = vals['billable_hours']
-
         # Validar permisos para editar billable_hours
         if 'billable_hours' in vals and not self.env.user.has_group('timesheet_billable.edit_billable_hours'):
             raise AccessError(_("No tienes permisos para editar el campo 'Horas Dedicadas'."))
+
+        # Sincronizar billable_hours con unit_amount
+        if 'billable_hours' in vals:
+            vals['unit_amount'] = vals['billable_hours']
 
         # Evitar recursión al actualizar el registro
         return super(AccountAnalyticLine, self.with_context(prevent_recursion=True)).write(vals)

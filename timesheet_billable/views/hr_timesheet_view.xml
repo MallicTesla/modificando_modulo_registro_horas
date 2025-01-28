@@ -9,12 +9,16 @@
                 <!-- Modificar la visibilidad de 'unit_amount' -->
                 <xpath expr="//field[@name='unit_amount']" position="attributes">
                     <attribute name="groups">timesheet_billable.view_billable_hours</attribute>
+                    <attribute name="mode">readonly</attribute>
                 </xpath>
                 <!-- Agregar el campo 'billable_hours' -->
                 <xpath expr="//field[@name='unit_amount']" position="after">
                     <field name="billable_hours" 
                         string="Horas Dedicadas" 
-                        sum="Total"/>
+                        widget="float_time" 
+                        sum="Total"
+                        mode="readonly"
+                        groups="timesheet_billable.edit_billable_hours"/>
                 </xpath>
             </field>
         </record>
@@ -28,11 +32,15 @@
                 <!-- Modificar la visibilidad de 'unit_amount' -->
                 <xpath expr="//field[@name='unit_amount']" position="attributes">
                     <attribute name="groups">timesheet_billable.view_billable_hours</attribute>
+                    <attribute name="mode">readonly</attribute>
                 </xpath>
                 <!-- Agregar el campo 'billable_hours' -->
                 <xpath expr="//field[@name='unit_amount']" position="after">
                     <field name="billable_hours" 
-                        string="Horas Dedicadas"/>
+                        string="Horas Dedicadas" 
+                        widget="float_time"
+                        mode="readonly"
+                        groups="timesheet_billable.edit_billable_hours"/>
                 </xpath>
             </field>
         </record>
