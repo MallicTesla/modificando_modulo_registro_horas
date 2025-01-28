@@ -6,10 +6,10 @@
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
-                <!-- Modificar la visibilidad de 'unit_amount' -->
+                <!-- Mostrar el campo 'unit_amount' -->
                 <xpath expr="//field[@name='unit_amount']" position="attributes">
+                    <attribute name="readonly">1</attribute>
                     <attribute name="groups">timesheet_billable.view_billable_hours</attribute>
-                    <attribute name="mode">readonly</attribute>
                 </xpath>
                 <!-- Agregar el campo 'billable_hours' -->
                 <xpath expr="//field[@name='unit_amount']" position="after">
@@ -17,8 +17,7 @@
                         string="Horas Dedicadas" 
                         widget="float_time" 
                         sum="Total"
-                        mode="readonly"
-                        groups="timesheet_billable.edit_billable_hours"/>
+                        readonly="1"/>
                 </xpath>
             </field>
         </record>
@@ -29,18 +28,17 @@
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
-                <!-- Modificar la visibilidad de 'unit_amount' -->
+                <!-- Mostrar el campo 'unit_amount' -->
                 <xpath expr="//field[@name='unit_amount']" position="attributes">
+                    <attribute name="readonly">1</attribute>
                     <attribute name="groups">timesheet_billable.view_billable_hours</attribute>
-                    <attribute name="mode">readonly</attribute>
                 </xpath>
                 <!-- Agregar el campo 'billable_hours' -->
                 <xpath expr="//field[@name='unit_amount']" position="after">
                     <field name="billable_hours" 
                         string="Horas Dedicadas" 
                         widget="float_time"
-                        mode="readonly"
-                        groups="timesheet_billable.edit_billable_hours"/>
+                        readonly="1"/>
                 </xpath>
             </field>
         </record>
