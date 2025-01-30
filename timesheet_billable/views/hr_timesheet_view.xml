@@ -1,44 +1,61 @@
 <odoo>
     <data>
-        <!-- Herencia de la vista de árbol -->
+        <!-- Modificación de la vista en árbol -->
         <record id="timesheet_view_tree_focus" model="ir.ui.view">
             <field name="name">account.analytic.line.view.tree.focus</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
-                <!-- Mostrar el campo 'unit_amount' -->
+
+                <!-- Agregar el campo is_editable (oculto) para usarlo en las restricciones -->
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="sample">1</attribute>
+                </xpath>
+                <xpath expr="//tree" position="inside">
+                    <field name="is_editable" invisible="1"/>
+                </xpath>
+
+                <!-- Hacer unit_amount solo editable si el usuario tiene permisos -->
                 <xpath expr="//field[@name='unit_amount']" position="attributes">
-                    <attribute name="readonly">1</attribute>
+                    <attribute name="readonly">is_editable == False</attribute>
                     <attribute name="groups">timesheet_billable.view_billable_hours</attribute>
                 </xpath>
-                <!-- Agregar el campo 'billable_hours' -->
+
+                <!-- Agregar billable_hours siempre visible, pero solo editable si el usuario tiene permisos -->
                 <xpath expr="//field[@name='unit_amount']" position="after">
                     <field name="billable_hours" 
                         string="Horas Dedicadas" 
-                        widget="float_time" 
+                        widget="float_time"
                         sum="Total"
-                        readonly="1"/>
+                        readonly="is_editable == False"/>
                 </xpath>
             </field>
         </record>
 
-        <!-- Herencia de la vista formulario -->
+        <!-- Modificación de la vista en formulario -->
         <record id="timesheet_view_form_focus" model="ir.ui.view">
             <field name="name">account.analytic.line.view.form.focus</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
-                <!-- Mostrar el campo 'unit_amount' -->
+
+                <!-- Agregar el campo is_editable (oculto) para usarlo en las restricciones -->
+                <xpath expr="//form" position="inside">
+                    <field name="is_editable" invisible="1"/>
+                </xpath>
+
+                <!-- Hacer unit_amount solo editable si el usuario tiene permisos -->
                 <xpath expr="//field[@name='unit_amount']" position="attributes">
-                    <attribute name="readonly">1</attribute>
+                    <attribute name="readonly">is_editable == False</attribute>
                     <attribute name="groups">timesheet_billable.view_billable_hours</attribute>
                 </xpath>
-                <!-- Agregar el campo 'billable_hours' -->
+
+                <!-- Agregar billable_hours siempre visible, pero solo editable si el usuario tiene permisos -->
                 <xpath expr="//field[@name='unit_amount']" position="after">
                     <field name="billable_hours" 
                         string="Horas Dedicadas" 
                         widget="float_time"
-                        readonly="1"/>
+                        readonly="is_editable == False"/>
                 </xpath>
             </field>
         </record>

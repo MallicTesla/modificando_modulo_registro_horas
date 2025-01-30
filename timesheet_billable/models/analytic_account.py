@@ -2,7 +2,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import AccessError
 
-
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
@@ -11,6 +10,14 @@ class AccountAnalyticLine(models.Model):
         default=0.0,
         help="Duración en horas y minutos. Ejemplo: 1.5 equivale a 1 hora y 30 minutos.",
     )
+
+    is_editable = fields.Boolean(compute="_compute_is_editable", store=False)
+
+    def _compute_is_editable(self):
+        """Determina si el usuario tiene permisos de edición."""
+        has_edit_permission = self.env.user.has_group("timesheet_billable.edit_billable_hours")
+        for record in self:
+            record.is_editable = has_edit_permission
 
     @api.model
     def create(self, vals):

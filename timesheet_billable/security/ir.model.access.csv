@@ -1,4 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_account_analytic_line_view_hours,account_analytic_line.view_hours,model_account_analytic_line,timesheet_billable.view_billable_hours,1,0,0,0
 access_account_analytic_line_edit_hours,account_analytic_line.edit_hours,model_account_analytic_line,timesheet_billable.edit_billable_hours,1,1,1,1
-
